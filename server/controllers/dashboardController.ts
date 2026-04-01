@@ -67,18 +67,44 @@ export const getCategoryTotals = async (req: Request, res: Response): Promise<vo
 };
 
 
-export const getTrends = async (_req: Request, res: Response): Promise<void> => {
+export const getTrends = async (req: Request, res: Response): Promise<void> => {
   try {
+    const { period } = req.query;
+    let interval = "12 months";
+    let dateFormat = "YYYY-MM";
+
+    switch (period) {
+      case "1D":
+        interval = "1 day";
+        dateFormat = "HH24:00";
+        break;
+      case "1M":
+        interval = "1 month";
+        dateFormat = "MM-DD";
+        break;
+      case "3M":
+        interval = "3 months";
+        dateFormat = "YYYY-MM";
+        break;
+      case "6M":
+        interval = "6 months";
+        dateFormat = "YYYY-MM";
+        break;
+      default:
+        interval = "12 months";
+        dateFormat = "YYYY-MM";
+    }
+
     const result = await pool.query(`
       SELECT
-        TO_CHAR(date, 'YYYY-MM') AS month,
+        TO_CHAR(date, '${dateFormat}') AS month,
         COALESCE(SUM(CASE WHEN type = 'income' THEN amount ELSE 0 END), 0)::float  AS income,
         COALESCE(SUM(CASE WHEN type = 'expense' THEN amount ELSE 0 END), 0)::float AS expenses,
         COALESCE(SUM(CASE WHEN type = 'income' THEN amount ELSE -amount END), 0)::float AS net
       FROM financial_records
       WHERE is_deleted = false
-        AND date >= (CURRENT_DATE - INTERVAL '12 months')
-      GROUP BY TO_CHAR(date, 'YYYY-MM')
+        AND date >= (CURRENT_DATE - INTERVAL '${interval}')
+      GROUP BY TO_CHAR(date, '${dateFormat}')
       ORDER BY month ASC
     `);
 
