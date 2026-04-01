@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: zorvyn-db
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      POSTGRES_DB: ${POSTGRES_DB:-zorvyn_db}
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - postgres_data:/var/lib/postgresql/data
+
+  app:
+    build: .
+    container_name: zorvyn-backend
+    restart: always
+    ports:
+      - "5555:5555"
+    environment:
+      PG_CONNECTION_STRING: "postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-password}@db:5432/${POSTGRES_DB:-zorvyn_db}?sslmode=disable"
+      JWT_SECRET: ${JWT_SECRET:-supersecretaccesskey}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-supersecretrefreshkey}
+      NODE_ENV: production
+      PORT: 5555
+      CORS_ORIGIN: "http://localhost:3000"
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
