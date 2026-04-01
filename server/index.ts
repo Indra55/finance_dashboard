@@ -17,13 +17,18 @@ app.use(logger);
 
 app.use(express.json({ limit: "10mb" }));
 app.use(cookieParser());
+const allowedOrigins = process.env.CORS_ORIGIN 
+  ? process.env.CORS_ORIGIN.split(",").map(o => o.trim()) 
+  : ["http://localhost:3000", "http://localhost:5173"];
+
 app.use(cors({
-  origin: process.env.CORS_ORIGIN?.split(",") || ["http://localhost:3000", "http://localhost:5173"],
+  origin: allowedOrigins,
   credentials: true,
+  optionsSuccessStatus: 200
 }));
 
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, 
+  windowMs: 15 * 60 * 1000,
   max: 100,
   standardHeaders: true,
   legacyHeaders: false,
