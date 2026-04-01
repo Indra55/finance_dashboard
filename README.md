@@ -10,6 +10,70 @@ A production-ready, full-stack finance dashboard system featuring granular Role-
 
 ---
 
+## 🔐 Identity & Access Flow
+
+### **User Archetypes**
+To evaluate the system, use these pre-seeded credentials:
+
+| Role        | Email                  | Password      | Capabilities Profile                     |
+|-------------|------------------------|---------------|-----------------------------------------|
+| **Admin**    | `admin@example.com`    | `admin123`    | Full CRUD + User Registry + Analytics   |
+| **Analyst**  | `analyst@example.com`  | `analyst123`  | Creation/Editing + Analytics            |
+| **Viewer**   | `viewer@example.com`   | `viewer123`   | Read-Only Ledger + Analytics            |
+
+### **Flow Diagram**
+```mermaid
+graph TD
+    A[Landing Page] --> B{Identity Known?}
+    B -- No --> C[Sign Up / Sign In]
+    C --> D[Vault Dashboard]
+    B -- Yes --> D
+    
+    D --> E[Record Management]
+    D --> F[Financial Analytics]
+    D --> G{Is Admin?}
+    G -- Yes --> H[Identity Registry]
+    G -- No --> D
+    
+    E --> I[Logout]
+    H --> I
+    I --> A
+```
+
+---
+
+## 📊 Data Schema
+
+Zorvyn utilizes a relational PostgreSQL model designed for ACID compliance and audit trails.
+
+```mermaid
+erDiagram
+    USERS ||--o{ FINANCIAL_RECORDS : "owns"
+    USERS {
+        uuid id PK
+        string name
+        string email UK
+        string password_hash
+        string role "admin | analyst | viewer"
+        string status "active | inactive"
+        string refresh_token
+        timestamp created_at
+    }
+    FINANCIAL_RECORDS {
+        uuid id PK
+        uuid user_id FK
+        decimal magnitude "15,2 precision"
+        string flow_type "income | expense"
+        string category
+        text narrative
+        date origin_date
+        bool is_deleted
+        timestamp created_at
+    }
+```
+
+---
+
 ## The Stack
 
 ### **Backend (The Engine)**
@@ -22,9 +86,8 @@ A production-ready, full-stack finance dashboard system featuring granular Role-
 ### **Frontend (The Interface)**
 - **Framework:** Next.js 14+ (App Router)
 - **Styling:** Tailwind CSS (Modern glassmorphic utility-first design)
-- **Icons:** Lucide React (Clean, minimal visual language)
+- **Architecture:** Unified Responsive Dashboard (Desktop Sidebar + Mobile Floating Dock)
 - **State Management:** React Context API (Identity & Auth synchronization)
-- **Charts:** Recharts (High-fidelity financial data visualization)
 
 ---
 
@@ -42,15 +105,13 @@ zorvyn/
     ├── controllers/            # Business logic handlers
     ├── middleware/             # Auth, RBAC, and Error filters
     ├── routes/                 # REST Endpoint definitions
-    ├── utils/                  # Validation & Parsing helpers
-    └── db/                     # SQL Schemas & Initializers
 ```
 
 ---
 
 ## Role-Based Access Control (RBAC)
 
-Zorvyn implements a strict permission hierarchy designed for organizational financial management:
+Zorvyn implements a strict permission hierarchy:
 
 | Role        | Records Management  | Analytics | User Ops | Permissions Profile |
 |-------------|---------------------|-----------|----------|---------------------|
@@ -62,17 +123,6 @@ Zorvyn implements a strict permission hierarchy designed for organizational fina
 
 ---
 
-## Analytics Suite (API Endpoints)
-
-The dashboard is powered by a set of high-performance aggregation queries:
-
-- **`/api/dashboard/summary`**: Real-time Net Balance, Total Income, and Total Expense calculations.
-- **`/api/dashboard/category-totals`**: Spend distribution across categories (Food, Rent, Salary, etc.).
-- **`/api/dashboard/trends`**: Monthly historical analysis for the last 12 months.
-- **`/api/dashboard/recent`**: Stream of the last 10 transactions with role-aware detail levels.
-
----
-
 ## Local Development
 
 ### 1. Requirements
@@ -80,7 +130,7 @@ The dashboard is powered by a set of high-performance aggregation queries:
 - PostgreSQL instance running.
 
 ### 2. Configuration
-Create a `.env` in the root (and `server/` directory) with the following:
+Create a `.env` in the `server/` directory:
 ```env
 PORT=5555
 PG_CONNECTION_STRING=postgres://user:pass@localhost:5432/zorvyn
@@ -97,19 +147,18 @@ bun install
 # Initialize DB
 psql -d zorvyn -f server/db/init.sql
 
+# Seed the database
+cd server && bun run scripts/seed.ts
+
 # Start development environment
-bun run dev:all # Starts both client and server
+bun run dev:all
 ```
 
 ---
 
 ## Testing Suite
 
-Tests are built with **Vitest** and **Supertest** to ensure architectural reliability:
-- **Auth Integrity:** Validates token issuance, rotation, and rejection of malformed identity signatures.
-- **RBAC Guarding:** Strictly tests that `Viewers` cannot invoke `POST/PUT/DELETE` methods.
-- **Data Validation:** Ensures UUID formats, currency precision, and date ranges.
-
+Tests are built with **Vitest** and **Supertest** to ensure architectural reliability.
 ```bash
 cd server
 bun test
@@ -119,10 +168,10 @@ bun test
 
 ## Design Philosophy & Choices
 
-1. **Self-Contained PaaS:** Deployed on **Holonet**, a custom-built PaaS platform that demonstrates infrastructure management skills alongside backend coding.
-2. **Stateless Scalability:** JWT tokens allow the backend to scale horizontally without session synchronization.
-3. **Glassmorphism UI:** Chosen to give the application a "High-End Fintech" feel, moving away from generic dashboards.
-4. **Soft-Delete Patterns:** Financial data is never truly lost; records are marked `is_deleted: true` to preserve audit trails while hiding them from standard views.
+1. **Self-Contained PaaS:** Deployed on **Holonet** to demonstrate end-to-end infrastructure knowledge.
+2. **Stateless Scalability:** JWT-based auth handles sessions efficiently without server-side state.
+3. **Glassmorphism UI:** Premium fintech aesthetic using backdrop blurs and luminescent accents.
+4. **Soft-Delete Patterns:** Financial data is never truly lost; records are marked `is_deleted: true` to preserve audit trails.
 
 ---
 
