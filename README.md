@@ -2,7 +2,7 @@
 
 A production-ready, full-stack finance dashboard system featuring granular Role-Based Access Control (RBAC), real-time financial analytics, and a premium glassmorphic interface. Built as part of a backend engineering internship assessment.
 
-## 🚀 Live Implementation
+## Live Implementation
 
 - **Platform:** [https://zorvyn.hitanshu.xyz](https://zorvyn.hitanshu.xyz)
 - **Deployment Strategy:** Managed via **Holonet PaaS** (Self-hosted on AWS EC2)
@@ -10,7 +10,7 @@ A production-ready, full-stack finance dashboard system featuring granular Role-
 
 ---
 
-## 🛠️ The Stack
+## The Stack
 
 ### **Backend (The Engine)**
 - **Runtime:** [Bun](https://bun.sh) (Native TypeScript support & high-perf I/O)
@@ -28,7 +28,7 @@ A production-ready, full-stack finance dashboard system featuring granular Role-
 
 ---
 
-## ⚙️ Architecture
+## Architecture
 
 ```bash
 zorvyn/
@@ -48,21 +48,21 @@ zorvyn/
 
 ---
 
-## 🔐 Role-Based Access Control (RBAC)
+## Role-Based Access Control (RBAC)
 
 Zorvyn implements a strict permission hierarchy designed for organizational financial management:
 
 | Role        | Records Management  | Analytics | User Ops | Permissions Profile |
 |-------------|---------------------|-----------|----------|---------------------|
-| **Admin**   | Full CRUD + Delete  | ✅ Full    | ✅ Full   | System over-watch & audit |
-| **Analyst** | Create / Update     | ✅ Full    | ❌ None  | Data processing & reporting |
-| **Viewer**  | 👁️ Read-only        | 👁️ Read   | ❌ None  | Observations & auditing |
+| **Admin**   | Full CRUD + Delete  | Full      | Full      | System over-watch & audit |
+| **Analyst** | Create / Update     | Full      | None     | Data processing & reporting |
+| **Viewer**  | Read-only           | Read      | None     | Observations & auditing |
 
 > **Note:** Registration defaults to `viewer`. Role escalation must be performed by an existing `admin` via the User Management interface.
 
 ---
 
-## 📊 Analytics Suite (API Endpoints)
+## Analytics Suite (API Endpoints)
 
 The dashboard is powered by a set of high-performance aggregation queries:
 
@@ -73,7 +73,7 @@ The dashboard is powered by a set of high-performance aggregation queries:
 
 ---
 
-## 🛠️ Local Development
+## Local Development
 
 ### 1. Requirements
 - [Bun](https://bun.sh) installed.
@@ -103,7 +103,7 @@ bun run dev:all # Starts both client and server
 
 ---
 
-## 🧪 Testing Suite
+## Testing Suite
 
 Tests are built with **Vitest** and **Supertest** to ensure architectural reliability:
 - **Auth Integrity:** Validates token issuance, rotation, and rejection of malformed identity signatures.
@@ -117,7 +117,7 @@ bun test
 
 ---
 
-## 🏁 Design Philosophy & Choices
+## Design Philosophy & Choices
 
 1. **Self-Contained PaaS:** Deployed on **Holonet**, a custom-built PaaS platform that demonstrates infrastructure management skills alongside backend coding.
 2. **Stateless Scalability:** JWT tokens allow the backend to scale horizontally without session synchronization.
