@@ -4,24 +4,24 @@ A production-ready, full-stack finance dashboard system featuring granular Role-
 
 ## Live Implementation
 
-- **Platform:** [https://zorvyn.hitanshu.xyz](https://zorvyn.hitanshu.xyz)
-- **Deployment Strategy:** Managed via **Holonet PaaS** (Self-hosted on AWS EC2)
-- **API Documentation:** [https://zorvyn-backend.hitanshu.xyz/api-docs](https://zorvyn-backend.hitanshu.xyz/api-docs)
+* **Deployment Strategy:** Managed via **Holonet PaaS** (Self-hosted on AWS EC2)
 
 ---
 
 ## 🔐 Identity & Access Flow
 
 ### **User Archetypes**
+
 To evaluate the system, use these pre-seeded credentials:
 
-| Role        | Email                  | Password      | Capabilities Profile                     |
-|-------------|------------------------|---------------|-----------------------------------------|
-| **Admin**    | `admin@example.com`    | `admin123`    | Full CRUD + User Registry + Analytics   |
-| **Analyst**  | `analyst@example.com`  | `analyst123`  | Creation/Editing + Analytics            |
-| **Viewer**   | `viewer@example.com`   | `viewer123`   | Read-Only Ledger + Analytics            |
+| Role        | Email                 | Password     | Capabilities Profile                  |
+| ----------- | --------------------- | ------------ | ------------------------------------- |
+| **Admin**   | `admin@example.com`   | `admin123`   | Full CRUD + User Registry + Analytics |
+| **Analyst** | `analyst@example.com` | `analyst123` | Creation/Editing + Analytics          |
+| **Viewer**  | `viewer@example.com`  | `viewer123`  | Read-Only Ledger + Analytics          |
 
 ### **Flow Diagram**
+
 ```mermaid
 graph TD
     A[Landing Page] --> B{Identity Known?}
@@ -44,7 +44,7 @@ graph TD
 
 ## 📊 Data Schema
 
-Zorvyn utilizes a relational PostgreSQL model designed for ACID compliance and audit trails.
+Utilizes a relational PostgreSQL model designed for ACID compliance and audit trails.
 
 ```mermaid
 erDiagram
@@ -77,24 +77,26 @@ erDiagram
 ## The Stack
 
 ### **Backend (The Engine)**
-- **Runtime:** [Bun](https://bun.sh) (Native TypeScript support & high-perf I/O)
-- **Framework:** Express.js v5 (Standardized RESTful architecture)
-- **Database:** PostgreSQL (Relational integrity & ACID compliance)
-- **Auth:** Dual-Token JWT (Access + Refresh tokens with httpOnly cookies)
-- **Validation:** Type-safe custom validators & Zod-inspired schema check
+
+* **Runtime:** [Bun](https://bun.sh) (Native TypeScript support & high-perf I/O)
+* **Framework:** Express.js v5 (Standardized RESTful architecture)
+* **Database:** PostgreSQL (Relational integrity & ACID compliance)
+* **Auth:** Dual-Token JWT (Access + Refresh tokens with httpOnly cookies)
+* **Validation:** Type-safe custom validators & Zod-inspired schema check
 
 ### **Frontend (The Interface)**
-- **Framework:** Next.js 14+ (App Router)
-- **Styling:** Tailwind CSS (Modern glassmorphic utility-first design)
-- **Architecture:** Unified Responsive Dashboard (Desktop Sidebar + Mobile Floating Dock)
-- **State Management:** React Context API (Identity & Auth synchronization)
+
+* **Framework:** Next.js 14+ (App Router)
+* **Styling:** Tailwind CSS (Modern glassmorphic utility-first design)
+* **Architecture:** Unified Responsive Dashboard (Desktop Sidebar + Mobile Floating Dock)
+* **State Management:** React Context API (Identity & Auth synchronization)
 
 ---
 
 ## Architecture
 
 ```bash
-zorvyn/
+project/
 ├── client/                     # Next.js Frontend
 │   ├── app/                    # App Router (Dashboard, Login, Landing)
 │   ├── components/             # Reusable UI & Complex Layouts
@@ -111,13 +113,13 @@ zorvyn/
 
 ## Role-Based Access Control (RBAC)
 
-Zorvyn implements a strict permission hierarchy:
+Implements a strict permission hierarchy:
 
-| Role        | Records Management  | Analytics | User Ops | Permissions Profile |
-|-------------|---------------------|-----------|----------|---------------------|
-| **Admin**   | Full CRUD + Delete  | Full      | Full      | System over-watch & audit |
-| **Analyst** | Create / Update     | Full      | None     | Data processing & reporting |
-| **Viewer**  | Read-only           | Read      | None     | Observations & auditing |
+| Role        | Records Management | Analytics | User Ops | Permissions Profile         |
+| ----------- | ------------------ | --------- | -------- | --------------------------- |
+| **Admin**   | Full CRUD + Delete | Full      | Full     | System over-watch & audit   |
+| **Analyst** | Create / Update    | Full      | None     | Data processing & reporting |
+| **Viewer**  | Read-only          | Read      | None     | Observations & auditing     |
 
 > **Note:** Registration defaults to `viewer`. Role escalation must be performed by an existing `admin` via the User Management interface.
 
@@ -126,26 +128,30 @@ Zorvyn implements a strict permission hierarchy:
 ## Local Development
 
 ### 1. Requirements
-- [Bun](https://bun.sh) installed.
-- PostgreSQL instance running.
+
+* [Bun](https://bun.sh) installed.
+* PostgreSQL instance running.
 
 ### 2. Configuration
+
 Create a `.env` in the `server/` directory:
+
 ```env
 PORT=5555
-PG_CONNECTION_STRING=postgres://user:pass@localhost:5432/zorvyn
+PG_CONNECTION_STRING=postgres://user:pass@localhost:5432/finance_db
 JWT_SECRET=your_access_secret
 JWT_REFRESH_SECRET=your_refresh_secret
 CORS_ORIGIN=http://localhost:3000
 ```
 
 ### 3. Execution
+
 ```bash
 # Install dependencies
 bun install
 
 # Initialize DB
-psql -d zorvyn -f server/db/init.sql
+psql -d finance_db -f server/db/init.sql
 
 # Seed the database
 cd server && bun run scripts/seed.ts
@@ -159,6 +165,7 @@ bun run dev:all
 ## Testing Suite
 
 Tests are built with **Vitest** and **Supertest** to ensure architectural reliability.
+
 ```bash
 cd server
 bun test
@@ -177,3 +184,5 @@ bun test
 
 **Developed & Maintained by Hitanshu Gala**
 [GitHub](https://github.com/indra55) | [LinkedIn](https://www.linkedin.com/in/hitanshugala/) | [Portfolio](https://hitanshu.xyz)
+
+
