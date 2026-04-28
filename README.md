@@ -1,4 +1,4 @@
-# Zorvyn – Advanced Finance Intelligence Architecture
+# Advanced Finance Intelligence Architecture
 
 A production-ready, full-stack finance dashboard system featuring granular Role-Based Access Control (RBAC), real-time financial analytics, and a premium glassmorphic interface. Built as part of a backend engineering internship assessment.
 
